@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles/style.css" />
+  <title>Timer</title>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="timer">
+      <button title="click to open history" class="history-control" type="button">Open history
+        <svg>
+          <use href="./images/symbol-defs.svg#icon-arrow"></use>
+        </svg>
+      </button>
+      <div class="progress">
+        <div class="display-time">
+          <span class="timer-hour">30</span>
+          <span class="timer-minute"> min</span>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="timer-control">
+          <button title="click to start timer" class="btn start" type="button">
+            <svg>
+              <use href="./images/symbol-defs.svg#icon-start"></use>
+            </svg>
+          </button>
+          <button title="click to stop timer" class="btn stop" disabled type="button">
+            <svg>
+              <use href="./images/symbol-defs.svg#icon-stop"></use>
+            </svg>
+          </button>
+        </div>
+        <div class="add-time"> <button class="btn minus" type="button">-</button>
+          <input disabled class="timer-input" placeholder="30"></input>
+          <button class="btn plus" type="button">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="history">
+      <div class="history-element">
+        <span class="day">Day</span>
+        <span class="time-start">Start</span>
+        <span class="time-end">End</span>
+      </div>
+      <div class="history-body"></div>
+      <button class="btn clear-history" type="button">Clear history</button>
+    </div>
+  </div>
+  <script src="./scripts/timer-control.js"></script>
+  <script src="./scripts/history-control.js"></script>
+</body>
+
+</html>
