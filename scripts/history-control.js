@@ -9,7 +9,7 @@ function toggleHistoryActiveClass() {
       `<span>
         Close history
         <svg style='transform: rotate(0)'>
-          <use href="./images/icons/symbol-defs.svg#icon-arrow"></use>
+          <use href="./images/symbol-defs.svg#icon-arrow"></use>
         </svg>
       </span>`
     );
@@ -17,7 +17,7 @@ function toggleHistoryActiveClass() {
     btnHistoryControl.innerHTML = `<span>
         Open history
         <svg>
-          <use href="./images/icons/symbol-defs.svg#icon-arrow"></use>
+          <use href="./images/symbol-defs.svg#icon-arrow"></use>
         </svg>
       </span>`;
   }
