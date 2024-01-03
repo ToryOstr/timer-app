@@ -1,9 +1,11 @@
 let btnHistoryControl = document.querySelector('.history-control');
 let btnClearHistory = document.querySelector('.clear-history');
 let historyContainer = document.querySelector('.history');
+
 function toggleHistoryActiveClass() {
   historyContainer.classList.toggle('active');
   let isActive = historyContainer.classList.contains('active');
+
   if (isActive) {
     btnHistoryControl.innerHTML = (
       `<span>
@@ -26,25 +28,27 @@ function toggleHistoryActiveClass() {
 btnHistoryControl.addEventListener('click', toggleHistoryActiveClass);
 
 function generetedHistoryHtml() {
+
   let history = localStorage.getItem('timerHistory') ? JSON.parse(localStorage.getItem('timerHistory')) : 'you don`t have a history yet';
 
   let html = '';
   let time = (t) => {
+
+    let hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
+    let minute = new Date(t).getMinutes().toLocaleString().padStart(2, '0');
+    let second = new Date(t).getSeconds().toLocaleString().padStart(2, '0');
+    
     return `
-    ${(new Date(t).getHours().toLocaleString() < 10 ? '0' + (new Date(t).getHours().toLocaleString()) : new Date(t).getHours().toLocaleString())}:${(new Date(t).getMinutes().toLocaleString() < 10 ? '0' + (new Date(t).getMinutes().toLocaleString()) : new Date(t).getMinutes().toLocaleString())}:${(new Date(t).getSeconds().toLocaleString() < 10 ? '0' + (new Date(t).getSeconds().toLocaleString()) : new Date(t).getSeconds().toLocaleString())}
-    `
+    ${hour}:${minute}:${second}
+    `;
   }
+  
   let day = (d) => {
-    if (new Date(d).getUTCDate() < 10) {
-      return '0' + (new Date(d).getUTCDate());
-    }
-    return new Date(d).getUTCDate();
+    return new Date(d).getUTCDate().padStart(2, '0');
   }
+
   let month = (d) => {
-    if ((new Date(d).getMonth() + 1) < 10) {
-      return '0' + (new Date(d).getMonth() + 1);
-    }
-    return new Date(d).getMonth() + 1;
+    return (new Date(d).getMonth() + 1).padStart(2, '0');
   }
 
   if (history !== 'you don`t have a history yet') {
@@ -61,7 +65,9 @@ function generetedHistoryHtml() {
 
   historyContainer.querySelector('.history-body').innerHTML = html;
 }
+
 generetedHistoryHtml();
+
 btnStop.addEventListener('click', generetedHistoryHtml);
 
 btnClearHistory.addEventListener('click', () => {
