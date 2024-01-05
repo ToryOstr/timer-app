@@ -1,3 +1,4 @@
+import { btnStop, TIMER_HISTORY, timerHistory, getHistory } from "./timer-control.js";
 let btnHistoryControl = document.querySelector('.history-control');
 let btnClearHistory = document.querySelector('.clear-history');
 let historyContainer = document.querySelector('.history');
@@ -27,40 +28,47 @@ function toggleHistoryActiveClass() {
 
 btnHistoryControl.addEventListener('click', toggleHistoryActiveClass);
 
-function generetedHistoryHtml() {
+function formatingTime(t) {
 
-  let history = localStorage.getItem('timerHistory') ? JSON.parse(localStorage.getItem('timerHistory')) : 'you don`t have a history yet';
+  let hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
+  let minute = new Date(t).getMinutes().toLocaleString().padStart(2, '0');
+  let second = new Date(t).getSeconds().toLocaleString().padStart(2, '0');
 
-  let html = '';
-  let time = (t) => {
-
-    let hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
-    let minute = new Date(t).getMinutes().toLocaleString().padStart(2, '0');
-    let second = new Date(t).getSeconds().toLocaleString().padStart(2, '0');
-    
-    return `
+  return `
     ${hour}:${minute}:${second}
     `;
-  }
-  
-  let day = (d) => {
-    return new Date(d).getUTCDate().padStart(2, '0');
-  }
+}
 
-  let month = (d) => {
-    return (new Date(d).getMonth() + 1).padStart(2, '0');
+function totalTime(start, end) {
+  let ms = new Date(end) - new Date(start);
+  let totalMinutes = ms / (1000 * 60);
+  if (totalMinutes < 1) {
+    totalMinutes *= 60;
+    return `${Math.round(totalMinutes)}s`
   }
+  return `${totalMinutes.toFixed(2)}min`;
+}
 
-  if (history !== 'you don`t have a history yet') {
-    html = history.map(elem => {
+function formatingDate(d) {
+  let day = new Date(d).getUTCDate().toString().padStart(2, '0');
+  let month = (new Date(d).getMonth() + 1).toString().padStart(2, '0');
+  return `${day}.${month}`
+}
+
+function generetedHistoryHtml() {
+  let html;
+
+  if (!timerHistory.length) {
+    html = '<span class="history-empty">You don`t have a history yet</span>';
+  } else {
+    html = timerHistory.map(elem => {
       return `<div class="history-element">
-                <span class="day">${day(elem.start)}.${month(elem.start)}</span>
-                <span class="time-start">${time(elem.start)}</span>
-                <span  class="time-end">${time(elem.end)}</span>
+                <span class="day">${formatingDate(elem.start)}</span>
+                <span class="time-start">${formatingTime(elem.start)}</span>
+                <span  class="time-end">${formatingTime(elem.end)}</span>
+                <span class="total-time">${totalTime(elem.start, elem.end)}</span>
               </div>`;
     }).join('');
-  } else {
-    html = '<span class="history-empty">You don`t have a history yet</span>';
   }
 
   historyContainer.querySelector('.history-body').innerHTML = html;
@@ -71,8 +79,10 @@ generetedHistoryHtml();
 btnStop.addEventListener('click', generetedHistoryHtml);
 
 btnClearHistory.addEventListener('click', () => {
-  localStorage.removeItem('timerHistory');
-  eventsTimer = [];
+  localStorage.removeItem(TIMER_HISTORY); 
+  
+  getHistory();
+
   generetedHistoryHtml();
 
 });

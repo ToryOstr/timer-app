@@ -1,75 +1,77 @@
 //timer buttons
 let btnStart = document.querySelector('.start');
 let btnStop = document.querySelector('.stop');
+let btnReset = document.querySelector('.reset');
 
 let btnMinusTime = document.querySelector('.minus');
 let btnPlusTime = document.querySelector('.plus');
 let timerInput = document.querySelector('.timer-input');
 
 //timer display
-let timerHour = document.querySelector('.timer-hour');
-let timerMinute = document.querySelector('.timer-minute');
+let timerTime = document.querySelector('.timer-time');
+let displayTime = document.querySelector('.display-time');
 let progress = document.querySelector('.progress');
+const TIMER_HISTORY = 'timerHistory';
 
-let startTime = 30;
-let currantTime = startTime;
-timerInput.value = currantTime;
+let startTime = 1800; //seconds in 30min
 
-function disableBtn() {
+timerInput.value = Math.trunc(startTime / 60);
+
+let audio = new Audio('audio1.mp3');
+
+function disabledBtn() {
   if (timerInput.value <= 5) {
     btnMinusTime.disabled = true;
-    startTime = 5;
-    currantTime = startTime;
+    startTime = 300;
   }
   if (timerInput.value > 5) {
     btnMinusTime.disabled = false;
   }
 }
 
-function refreshTimer() {
-  currantTime = startTime;
-  timerInput.value = currantTime;
+function formaingTimerTime(t) {
+  let h = Math.trunc(t / 3600).toString().padStart(2, '0');
+  let m = Math.trunc((t / 60) % 60).toString().padStart(2, '0');
+  let s = Math.trunc(t % 60).toString().padStart(2, '0');
 
-  if (currantTime >= 60) {
-    timerHour.innerText = `${Math.floor(currantTime / 60)} h`;
-    timerMinute.innerText = `${currantTime % 60 == 0 ? 0 : currantTime % 60} min`;
-  } else {
-    timerHour.innerText = currantTime;
-    timerMinute.innerText = 'min';
-  }
+  return `${h}:${m}:${s}`
 }
 
+function refreshTimerInput(t) {
+  timerInput.value = Math.trunc(t / 60);
+}
+
+function refreshTimer(t) {
+  timerTime.innerText = formaingTimerTime(t);
+
+}
+refreshTimer(startTime);
+
 function decrementTimerValue() {
-  startTime -= 5;
-  disableBtn();
-  refreshTimer();
+  startTime -= 300;
+  disabledBtn();
+  refreshTimer(startTime);
+  refreshTimerInput(startTime);
   stopTimer();
 }
 
 function incrementTimerValue() {
-  disableBtn();
-  startTime += 5;
-  refreshTimer();
+  disabledBtn();
+  startTime += 300;
+  refreshTimer(startTime);
+  refreshTimerInput(startTime);
   stopTimer();
 }
 
-btnMinusTime.addEventListener('click', decrementTimerValue);
+let getHistory = () =>
+  JSON.parse(localStorage.getItem("timerHistory")) || [];
 
+btnMinusTime.addEventListener('click', decrementTimerValue);
 btnPlusTime.addEventListener('click', incrementTimerValue);
 
 let timerInterval;
-
-//load saved history
-let eventsTimer = [];
-
-function loadHistory() {
-  const storedHistory = localStorage.getItem('timerHistory');
-  if (storedHistory) {
-    eventsTimer = JSON.parse(storedHistory);
-  }
-}
-
-loadHistory();
+let timerHistory = getHistory();
+let eventsTimer = timerHistory;
 
 //genereted new timer event
 function generetedTimerStartEvent(id) {
@@ -81,63 +83,88 @@ function generetedTimerStartEvent(id) {
   eventsTimer.push(newEvent);
 }
 
+
 function generetedTimerEndEvent(index, endTimer) {
   eventsTimer[index].end = endTimer;
 }
 
-function addToHistory(array) {
+function filterHistory(array) {
+  let result = array.filter(event => event.end != null);
+  arrangeHistoryID(result);
 
-  
-  localStorage.setItem('timerHistory', JSON.stringify(array.map(event =>  ({
-    id: event.id,
-    start: event.start,
-    end: event.end,
-  }))));
-};
-
-function refreshTimerProgress() {
-  let totalTime = startTime * 60;
-
-  let progressValue = 100 - (((currantTime * 60) / totalTime) * 100);
-  progress.style.background =
-    ` conic-gradient(var(--accent-blue) 0 ${progressValue}%, var(--timer-background-color) ${progressValue}% 100%)`;
+  return result;
 }
 
-function startTimer() {
+function arrangeHistoryID(array) {
+  let result = [];
+  array.forEach((element, index) => {
+    element.id = index;
+    result.push(element)
+  });
+
+  return result;
+}
+
+function addToHistory(array) {
+  let filteredArray = filterHistory(array);
+
+  localStorage.setItem(TIMER_HISTORY, JSON.stringify(filteredArray));
+};
+
+//progress bar
+function calcProgress() {
+  let pr = 100 / (+timerInput.value * 60);
+  let progressValue = (pr * startTime).toFixed(2);
+  console.log(progressValue);
+
+  progress.style.background =
+    ` conic-gradient(var(--accent-blue) 0% ${progressValue}%, var(--timer-background-color) ${progressValue}% 100%)`;
+}
+
+function activeTimer() {
   generetedTimerStartEvent(eventsTimer.length);
   timerInterval = setInterval(() => {
-    currantTime -= 1;
-    refreshTimer();
-    setInterval(refreshTimerProgress, 1000);
-    if (currantTime == 0) {
+    startTime -= 1;
+    refreshTimer(startTime);
+    calcProgress();
+    if (startTime == 0) {
       stopTimer();
+      audio.play();
       setTimeout(() => {
-        currantTime = 30;
-        refreshTimer();
-        refreshTimerProgress();
+        startTime = 1800;
+        refreshTimer(startTime);
+        refreshTimerInput(startTime)
+        calcProgress();
       }, 1000);
     }
-  }, 60000);
-  document.querySelector('.display-time').classList.add('active-timer');
+  }, 1000);
+
+  displayTime.classList.add('active-timer');
   btnStart.disabled = true;
   btnStop.disabled = false;
 }
 
 function stopTimer() {
   clearInterval(timerInterval);
-  document.querySelector('.display-time').classList.remove('active-timer');
+  displayTime.classList.remove('active-timer');
   btnStart.disabled = false;
   btnStop.disabled = true;
-  console.log(eventsTimer);
 
 }
 
-btnStart.addEventListener('click', startTimer);
+btnStart.addEventListener('click', activeTimer);
 
 btnStop.addEventListener('click', () => {
   stopTimer();
+  audio.play();
   generetedTimerEndEvent(eventsTimer.length - 1, new Date());
   addToHistory(eventsTimer);
 });
-
-
+btnReset.addEventListener('click', () => {
+  stopTimer();
+  startTime = 1800;
+  refreshTimer(startTime);
+  refreshTimerInput(startTime)
+  calcProgress();
+})
+export { btnStop, TIMER_HISTORY, timerHistory, getHistory };
