@@ -1,4 +1,4 @@
-import { btnStop, TIMER_HISTORY, timerHistory, getHistory } from "./timer-control.js";
+import { btnStop, TIMER_HISTORY, getHistory } from "./timer-control.js";
 let btnHistoryControl = document.querySelector('.history-control');
 let btnClearHistory = document.querySelector('.clear-history');
 let historyContainer = document.querySelector('.history');
@@ -27,7 +27,6 @@ function toggleHistoryActiveClass() {
 }
 
 btnHistoryControl.addEventListener('click', toggleHistoryActiveClass);
-
 function formatingTime(t) {
 
   let hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
@@ -56,6 +55,7 @@ function formatingDate(d) {
 }
 
 function generetedHistoryHtml() {
+  let timerHistory = getHistory();
   let html;
 
   if (!timerHistory.length) {

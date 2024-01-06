@@ -48,19 +48,22 @@ function refreshTimer(t) {
 refreshTimer(startTime);
 
 function decrementTimerValue() {
-  startTime -= 300;
+  stopTimer();
+  Math.round(startTime/60)
+  startTime = (Math.round(startTime / 60) * 60) - 300;
   disabledBtn();
   refreshTimer(startTime);
   refreshTimerInput(startTime);
-  stopTimer();
+  calcProgress();
 }
 
 function incrementTimerValue() {
+  stopTimer();
   disabledBtn();
-  startTime += 300;
+  startTime = (Math.round(startTime / 60) * 60) + 300;
   refreshTimer(startTime);
   refreshTimerInput(startTime);
-  stopTimer();
+  calcProgress();
 }
 
 let getHistory = () =>
@@ -70,8 +73,7 @@ btnMinusTime.addEventListener('click', decrementTimerValue);
 btnPlusTime.addEventListener('click', incrementTimerValue);
 
 let timerInterval;
-let timerHistory = getHistory();
-let eventsTimer = timerHistory;
+let eventsTimer = getHistory();
 
 //genereted new timer event
 function generetedTimerStartEvent(id) {
@@ -107,7 +109,6 @@ function arrangeHistoryID(array) {
 
 function addToHistory(array) {
   let filteredArray = filterHistory(array);
-
   localStorage.setItem(TIMER_HISTORY, JSON.stringify(filteredArray));
 };
 
@@ -123,13 +124,16 @@ function calcProgress() {
 
 function activeTimer() {
   generetedTimerStartEvent(eventsTimer.length);
+
   timerInterval = setInterval(() => {
     startTime -= 1;
     refreshTimer(startTime);
     calcProgress();
+
     if (startTime == 0) {
       stopTimer();
       audio.play();
+
       setTimeout(() => {
         startTime = 1800;
         refreshTimer(startTime);
@@ -165,6 +169,7 @@ btnReset.addEventListener('click', () => {
   startTime = 1800;
   refreshTimer(startTime);
   refreshTimerInput(startTime)
+  disabledBtn();
   calcProgress();
 })
-export { btnStop, TIMER_HISTORY, timerHistory, getHistory };
+export { btnStop, TIMER_HISTORY, getHistory };
