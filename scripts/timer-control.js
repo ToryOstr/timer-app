@@ -116,7 +116,6 @@ function addToHistory(array) {
 function calcProgress() {
   let pr = 100 / (+timerInput.value * 60);
   let progressValue = (pr * startTime).toFixed(2);
-  console.log(progressValue);
 
   progress.style.background =
     ` conic-gradient(var(--accent-blue) 0% ${progressValue}%, var(--timer-background-color) ${progressValue}% 100%)`;
