@@ -80,8 +80,6 @@ btnStop.addEventListener('click', generetedHistoryHtml);
 
 btnClearHistory.addEventListener('click', () => {
   localStorage.removeItem(TIMER_HISTORY); 
-  
-  getHistory();
 
   generetedHistoryHtml();
 
