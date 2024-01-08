@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles/style.css" />
   <title>Timer</title>
+  <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -21,8 +22,8 @@
       </button>
       <div class="progress">
         <div class="display-time">
-          <span class="timer-hour">30</span>
-          <span class="timer-minute"> min</span>
+          <span class="timer-time">00:30:00</span>
+          <!-- <span class="timer-minute"> min</span> -->
         </div>
       </div>
       <div class="controls">
@@ -37,6 +38,11 @@
               <use href="./images/symbol-defs.svg#icon-stop"></use>
             </svg>
           </button>
+          <button title="click to reset timer" class="btn reset" type="button">
+            <svg>
+              <use href="./images/symbol-defs.svg#icon-reset"></use>
+            </svg>
+          </button>
         </div>
         <div class="add-time"> <button class="btn minus" type="button">-</button>
           <input disabled class="timer-input" placeholder="30"></input>
@@ -49,13 +55,14 @@
         <span class="day">Day</span>
         <span class="time-start">Start</span>
         <span class="time-end">End</span>
+        <span class="total-time">Total</span>
       </div>
       <div class="history-body"></div>
       <button class="btn clear-history" type="button">Clear history</button>
     </div>
   </div>
-  <script src="./scripts/timer-control.js"></script>
-  <script src="./scripts/history-control.js"></script>
+  <script type="module" src="./scripts/timer-control.js"></script>
+  <script type="module" src="./scripts/history-control.js"></script>
 </body>
 
 </html>

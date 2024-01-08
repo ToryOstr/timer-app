@@ -3,7 +3,7 @@
     -2px -2px 10px 0px rgba(255, 255, 255, 0.1), 2px 2px 10px 0px rgba(0, 0, 0, 0.6);
   --timer-background-color: #1d1d1d;
   --light-txt: rgb(143, 143, 143);
-  --accent-blue: rgb(0, 61, 131);
+  --accent-blue: rgb(14, 140, 198);
 }
 * {
   margin: 0;
@@ -19,6 +19,7 @@ button:hover {
   flex-direction: row;
   width: 600px;
   height: 315px;
+  margin: 0 auto;
   padding: 20px;
   justify-content: space-evenly;
   perspective: 400px;
@@ -66,7 +67,7 @@ button:hover {
 .history {
   position: relative;
   width: 50%;
-  transform: translate(-120%) rotateY(90deg) scaleY(0.6);
+  transform: translate(-120%) rotateY(90deg) scaleY(0.5);
   z-index: -1;
   transition: 0.4s;
 }
@@ -84,7 +85,6 @@ button:hover {
 .active {
   transform: translate(0) rotateY(0) scaleY(1);
 }
-
 .progress {
   display: flex;
   justify-content: center;
@@ -101,29 +101,20 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 145px;
-  height: 145px;
+  width: 142px;
+  height: 142px;
   border-radius: 50%;
   background-color: var(--timer-background-color);
   color: var(--light-txt);
 }
-.timer-hour,
-.timer-minute,
-.timer-seconds {
+.timer-time {
   font-family: 'Courier Prime', monospace;
+  font-size: 24px;
   line-height: 1;
   font-weight: 700;
   /* color: var(--light-txt); */
 }
-.timer-hour {
-  font-size: 36px;
-}
-.timer-minute {
-  font-size: 20px;
-}
-.timer-seconds {
-  font-size: 16px;
-}
+
 .controls,
 .add-time,
 .timer-control {
@@ -163,7 +154,7 @@ button:hover {
   bottom: 10px;
   right: 10px;
   font-size: 10px;
-  opacity: 0.15;
+  opacity: 0.35;
 }
 .clear-history:hover {
   color: var(--accent-blue);
@@ -181,8 +172,9 @@ button:hover {
   width: 20%;
 }
 .time-start,
-.time-end {
-  width: 40%;
+.time-end,
+.total-time {
+  flex: 1 1 auto;
 }
 .history-element > span {
   padding: 0px 5px;
@@ -202,6 +194,9 @@ button:hover {
   fill: rgb(29, 122, 29);
 }
 .btn.stop:hover svg {
+  fill: rgb(155, 31, 31);
+}
+.btn.reset:hover svg {
   fill: rgb(155, 31, 31);
 }
 
@@ -244,17 +239,18 @@ button:hover {
 }
 @media (max-width: 600px) {
   .wrapper {
-    width: 100%;
-    min-width: 300px;
+    width: clamp(300px, 100%, 450px);
     height: auto;
     gap: 10px;
+    margin: 0 auto;
     flex-direction: column;
     padding: 20px;
     perspective-origin: 50% 50%;
   }
   .timer,
   .history {
-    width: 300px;
+    width: clamp(100%, 100%, 300px);
+    padding: 20px;
   }
   .history {
     position: relative;
@@ -262,11 +258,13 @@ button:hover {
     z-index: -1;
     transition: 0.4s;
   }
+
   .active {
     transform: translateY(0) rotateX(0) scaleX(1);
   }
-  .history-control{
-    top: 250px;
+
+  .history-control {
+    top: 265px;
     right: 10px;
     transform: rotate(0);
   }
