@@ -1,4 +1,4 @@
-# timer-app
+[timer-app](https://toryostr.github.io/timer-app/)
 
 [![timer.png](https://i.postimg.cc/Vk6kP8fs/timer.png)](https://postimg.cc/F7M40wkw)
 
