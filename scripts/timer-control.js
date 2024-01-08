@@ -49,8 +49,7 @@ refreshTimer(startTime);
 
 function decrementTimerValue() {
   stopTimer();
-  Math.round(startTime/60)
-  startTime = (Math.round(startTime / 60) * 60) - 300;
+  startTime -= 300;
   disabledBtn();
   refreshTimer(startTime);
   refreshTimerInput(startTime);
@@ -60,7 +59,7 @@ function decrementTimerValue() {
 function incrementTimerValue() {
   stopTimer();
   disabledBtn();
-  startTime = (Math.round(startTime / 60) * 60) + 300;
+  startTime += 300;
   refreshTimer(startTime);
   refreshTimerInput(startTime);
   calcProgress();
@@ -150,6 +149,7 @@ function activeTimer() {
 function stopTimer() {
   clearInterval(timerInterval);
   displayTime.classList.remove('active-timer');
+  startTime = Math.round(startTime / 60) * 60;
   btnStart.disabled = false;
   btnStop.disabled = true;
 
@@ -162,6 +162,8 @@ btnStop.addEventListener('click', () => {
   audio.play();
   generetedTimerEndEvent(eventsTimer.length - 1, new Date());
   addToHistory(eventsTimer);
+  refreshTimer(startTime);
+  refreshTimerInput(startTime);
 });
 btnReset.addEventListener('click', () => {
   stopTimer();

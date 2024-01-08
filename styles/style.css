@@ -19,6 +19,7 @@ button:hover {
   flex-direction: row;
   width: 600px;
   height: 315px;
+  margin: 0 auto;
   padding: 20px;
   justify-content: space-evenly;
   perspective: 400px;
@@ -66,7 +67,7 @@ button:hover {
 .history {
   position: relative;
   width: 50%;
-  transform: translate(-120%) rotateY(90deg) scaleY(0.6);
+  transform: translate(-120%) rotateY(90deg) scaleY(0.5);
   z-index: -1;
   transition: 0.4s;
 }
@@ -84,7 +85,6 @@ button:hover {
 .active {
   transform: translate(0) rotateY(0) scaleY(1);
 }
-
 .progress {
   display: flex;
   justify-content: center;
@@ -239,17 +239,18 @@ button:hover {
 }
 @media (max-width: 600px) {
   .wrapper {
-    width: 100%;
-    min-width: 300px;
+    width: clamp(300px, 100%, 450px);
     height: auto;
     gap: 10px;
+    margin: 0 auto;
     flex-direction: column;
     padding: 20px;
     perspective-origin: 50% 50%;
   }
   .timer,
   .history {
-    width: 300px;
+    width: clamp(100%, 100%, 300px);
+    padding: 20px;
   }
   .history {
     position: relative;
@@ -257,11 +258,13 @@ button:hover {
     z-index: -1;
     transition: 0.4s;
   }
+
   .active {
     transform: translateY(0) rotateX(0) scaleX(1);
   }
+
   .history-control {
-    top: 250px;
+    top: 265px;
     right: 10px;
     transform: rotate(0);
   }
