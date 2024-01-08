@@ -66,7 +66,7 @@ function incrementTimerValue() {
 }
 
 let getHistory = () =>
-  JSON.parse(localStorage.getItem("timerHistory")) || [];
+  JSON.parse(localStorage.getItem(TIMER_HISTORY)) || [];
 
 btnMinusTime.addEventListener('click', decrementTimerValue);
 btnPlusTime.addEventListener('click', incrementTimerValue);
