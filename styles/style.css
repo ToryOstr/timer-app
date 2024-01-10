@@ -17,12 +17,12 @@ button:hover {
 .wrapper {
   display: flex;
   flex-direction: row;
-  width: clamp(100%, 600px, 600px);
+  width: 600px;
   height: 315px;
   margin: 0 auto;
   padding: 20px;
   justify-content: space-evenly;
-  perspective: -250px;
+  perspective: 400px;
   perspective-origin: 0 50%;
 }
 .timer,
