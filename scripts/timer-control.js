@@ -11,7 +11,7 @@ let timerInput = document.querySelector('.timer-input');
 let timerTime = document.querySelector('.timer-time');
 let displayTime = document.querySelector('.display-time');
 let progress = document.querySelector('.progress');
-const TIMER_HISTORY = 'timerHistory';
+const HISTORY_KEY = 'timerHistory';
 
 let startTime = 1800; //seconds in 30min
 
@@ -41,19 +41,32 @@ function refreshTimerInput(t) {
   timerInput.value = Math.trunc(t / 60);
 }
 
-function refreshTimer(t) {
+function refreshTimerDisplay(t) {
   timerTime.innerText = formaingTimerTime(t);
-
 }
-refreshTimer(startTime);
+
+// refreshTimerDisplay(startTime);
+function refreshTimer(t) {
+  refreshTimerDisplay(t);
+  refreshTimerInput(t);
+  calcProgress();
+}
+
+//progress bar
+function calcProgress() {
+  let pr = 100 / (+timerInput.value * 60);
+  let progressValue = (pr * startTime).toFixed(2);
+
+  progress.style.background =
+    ` conic-gradient(var(--accent-blue) 0% ${progressValue}%, var(--timer-background-color) ${progressValue}% 100%)`;
+}
+
 
 function decrementTimerValue() {
   stopTimer();
   startTime -= 300;
   disabledBtn();
   refreshTimer(startTime);
-  refreshTimerInput(startTime);
-  calcProgress();
 }
 
 function incrementTimerValue() {
@@ -61,12 +74,11 @@ function incrementTimerValue() {
   disabledBtn();
   startTime += 300;
   refreshTimer(startTime);
-  refreshTimerInput(startTime);
-  calcProgress();
+
 }
 
 let getHistory = () =>
-  JSON.parse(localStorage.getItem(TIMER_HISTORY)) || [];
+  JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
 
 btnMinusTime.addEventListener('click', decrementTimerValue);
 btnPlusTime.addEventListener('click', incrementTimerValue);
@@ -74,7 +86,7 @@ btnPlusTime.addEventListener('click', incrementTimerValue);
 let timerInterval;
 let eventsTimer = getHistory();
 
-//genereted new timer event
+//genereted timer event
 function generetedTimerStartEvent(id) {
   let newEvent = {
     id: id,
@@ -83,7 +95,6 @@ function generetedTimerStartEvent(id) {
   };
   eventsTimer.push(newEvent);
 }
-
 
 function generetedTimerEndEvent(index, endTimer) {
   eventsTimer[index].end = endTimer;
@@ -108,35 +119,26 @@ function arrangeHistoryID(array) {
 
 function addToHistory(array) {
   let filteredArray = filterHistory(array);
-  localStorage.setItem(TIMER_HISTORY, JSON.stringify(filteredArray));
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(filteredArray));
 };
 
-//progress bar
-function calcProgress() {
-  let pr = 100 / (+timerInput.value * 60);
-  let progressValue = (pr * startTime).toFixed(2);
-
-  progress.style.background =
-    ` conic-gradient(var(--accent-blue) 0% ${progressValue}%, var(--timer-background-color) ${progressValue}% 100%)`;
-}
 
 function activeTimer() {
   generetedTimerStartEvent(eventsTimer.length);
 
   timerInterval = setInterval(() => {
     startTime -= 1;
-    refreshTimer(startTime);
-    calcProgress();
+    refreshTimerDisplay(startTime);
 
     if (startTime == 0) {
       stopTimer();
       audio.play();
-
+      generetedTimerEndEvent(eventsTimer.length - 1, new Date());
+      addToHistory(eventsTimer);
+      generetedHistoryHtml();
       setTimeout(() => {
         startTime = 1800;
         refreshTimer(startTime);
-        refreshTimerInput(startTime)
-        calcProgress();
       }, 1000);
     }
   }, 1000);
@@ -160,17 +162,104 @@ btnStart.addEventListener('click', activeTimer);
 btnStop.addEventListener('click', () => {
   stopTimer();
   audio.play();
+  refreshTimer(startTime);
   generetedTimerEndEvent(eventsTimer.length - 1, new Date());
   addToHistory(eventsTimer);
-  refreshTimer(startTime);
-  refreshTimerInput(startTime);
+  generetedHistoryHtml();
 });
+
 btnReset.addEventListener('click', () => {
   stopTimer();
   startTime = 1800;
   refreshTimer(startTime);
-  refreshTimerInput(startTime)
   disabledBtn();
-  calcProgress();
 })
-export { btnStop, TIMER_HISTORY, getHistory };
+
+let btnHistoryControl = document.querySelector('.history-control');
+let btnClearHistory = document.querySelector('.clear-history');
+let historyContainer = document.querySelector('.history');
+
+function toggleHistoryActiveClass() {
+
+  historyContainer.classList.toggle('active');
+
+  let isActive = historyContainer.classList.contains('active');
+
+  if (isActive) {
+    btnHistoryControl.innerHTML =`<span>
+        Close history
+        <svg style='transform: rotate(0)'>
+          <use href="./images/sprite.svg#icon-arrow"></use>
+        </svg>
+      </span>`;
+  } else {
+    btnHistoryControl.innerHTML = `<span>
+        Open history
+        <svg>
+          <use href="./images/sprite.svg#icon-arrow"></use>
+        </svg>
+      </span>`;
+  }
+}
+
+btnHistoryControl.addEventListener('click', toggleHistoryActiveClass);
+
+function formatingTime(t) {
+
+  let hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
+  let minute = new Date(t).getMinutes().toLocaleString().padStart(2, '0');
+  let second = new Date(t).getSeconds().toLocaleString().padStart(2, '0');
+
+  return `
+    ${hour}:${minute}:${second}
+    `;
+}
+
+function formatingDate(d) {
+
+  let day = new Date(d).getUTCDate().toString().padStart(2, '0');
+  let month = (new Date(d).getMonth() + 1).toString().padStart(2, '0');
+
+  return `${day}.${month}`
+}
+function totalTime(start, end) {
+
+  let ms = new Date(end) - new Date(start);
+  let totalMinutes = ms / (1000 * 60);
+
+  if (totalMinutes < 1) {
+    totalMinutes *= 60;
+    return `${Math.round(totalMinutes)}s`
+  }
+  return `${totalMinutes.toFixed(2)}min`;
+}
+
+function generetedHistoryHtml() {
+
+  let timerHistory = getHistory();
+  let html;
+
+  if (!timerHistory.length) {
+    html = '<span class="history-empty">You don`t have a history yet</span>';
+  } else {
+    html = timerHistory.reverse().map(elem => {
+      return `<div class="history-element">
+                <span class="day">${formatingDate(elem.start)}</span>
+                <span class="time-start">${formatingTime(elem.start)}</span>
+                <span  class="time-end">${formatingTime(elem.end)}</span>
+                <span class="total-time">${totalTime(elem.start, elem.end)}</span>
+              </div>`;
+    }).join('');
+  }
+
+  historyContainer.querySelector('.history-body').innerHTML = html;
+}
+
+generetedHistoryHtml();
+
+btnClearHistory.addEventListener('click', () => {
+  localStorage.removeItem(HISTORY_KEY);
+  eventsTimer = getHistory();
+  generetedHistoryHtml();
+
+});
