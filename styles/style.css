@@ -70,9 +70,31 @@ button:hover {
   transform: translate(-120%) rotateY(90deg) scaleY(0.5);
   z-index: -1;
   transition: 0.4s;
+
+}
+.history-body{
+  height: 235px;
+  overflow-y: scroll;
+}
+
+.history-body::-webkit-scrollbar {
+  width: 5px;/* ширина всієї смуги прокрутки */
+}
+.history-body::-webkit-scrollbar-track {
+  background: var(--timer-background-color); /* колір скролінгової області */
+}
+.history-body::-webkit-scrollbar-thumb {
+  background-color: var(--accent-blue); /* колір скролбару */
+  border-radius: 3px;
+  border: 1px solid var(--timer-background-color); /* додає паддінги навколу скролу */
 }
 .history-element {
   display: flex;
+}
+.history-element.header {
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(10px);
 }
 .history-element > p {
   display: flex;
@@ -149,15 +171,19 @@ button:hover {
 }
 .clear-history {
   position: absolute;
-  width: auto;
-  padding: 3px 10px;
-  bottom: 10px;
-  right: 10px;
-  font-size: 10px;
-  opacity: 0.35;
+  width: 25px;
+  height: 25px; 
+  padding: 0 5px;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
+  opacity:0.35;
+}
+.clear-history svg{
+  fill: var(--light-txt);
 }
 .clear-history:hover {
-  color: var(--accent-blue);
+  color: var(--timer-background-color);
   background-color: var(--light-txt);
   opacity: 1;
 }
@@ -250,11 +276,12 @@ button:hover {
   .timer,
   .history {
     width: clamp(100%, 100%, 300px);
-    padding: 20px;
+    padding:10px 20px;
+    height: 290px;
   }
   .history {
     position: relative;
-    transform: translateY(-120%) rotateX(90deg) scaleX(0.6);
+    transform: translateY(-100%) rotateX(45deg) scaleX(0.6);
     z-index: -1;
     transition: 0.4s;
   }
@@ -268,4 +295,7 @@ button:hover {
     right: 10px;
     transform: rotate(0);
   }
+  /* .clear-history {
+
+  } */
 }
