@@ -129,6 +129,7 @@ function activeTimer() {
   timerInterval = setInterval(() => {
     startTime -= 1;
     refreshTimerDisplay(startTime);
+    calcProgress();
 
     if (startTime == 0) {
       stopTimer();
