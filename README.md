@@ -1,4 +1,6 @@
-[timer-app](https://timer-with-history.netlify.app/)
+# [timer-app](https://timer-with-history.netlify.app/)
+
+Importantly! If the tab is not active, the browser blocks the timer.
 
 A timer application with a history of activity intervals. It is possible to clear the history.
 
