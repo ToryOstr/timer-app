@@ -17,10 +17,17 @@ button:hover {
 .message {
   width: 100%;
   margin: 5px 0;
+  padding: 0 px 10px;
   text-align: center;
   color: red;
   user-select: text;
+  opacity: 0;
+  transition: 0.3s;
 }
+.visible-message{
+  opacity: 1;
+}
+
 .wrapper {
   display: flex;
   flex-direction: row;

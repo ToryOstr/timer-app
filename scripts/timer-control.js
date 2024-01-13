@@ -264,3 +264,15 @@ btnClearHistory.addEventListener('click', () => {
   generetedHistoryHtml();
 
 });
+
+let message = document.querySelector('.message');
+
+document.addEventListener('mousemove', (e) => {
+  if (e.pageY < 50 || e.pageX < 50) {
+    message.classList.add('visible-message');
+  } else {
+    message.classList.remove('visible-message');
+  }
+  
+
+})
