@@ -266,9 +266,11 @@ btnClearHistory.addEventListener('click', () => {
 });
 
 let message = document.querySelector('.message');
+let wWidth = window.visualViewport.width;
+let wHeght = window.visualViewport.height;
 
 document.addEventListener('mousemove', (e) => {
-  if (e.pageY < 50 || e.pageX < 50) {
+  if (e.pageY < 50 || e.pageX < 50 || e.pageX > wWidth - 50 || e.pageY > wHeght - 50) {
     message.classList.add('visible-message');
   } else {
     message.classList.remove('visible-message');
