@@ -1,23 +1,23 @@
 //timer buttons
-let btnStart = document.querySelector('.start');
-let btnStop = document.querySelector('.stop');
-let btnReset = document.querySelector('.reset');
+const btnStart = document.querySelector('.start');
+const btnStop = document.querySelector('.stop');
+const btnReset = document.querySelector('.reset');
 
-let btnMinusTime = document.querySelector('.minus');
-let btnPlusTime = document.querySelector('.plus');
-let timerInput = document.querySelector('.timer-input');
+const btnMinusTime = document.querySelector('.minus');
+const btnPlusTime = document.querySelector('.plus');
+const timerInput = document.querySelector('.timer-input');
 
 //timer display
-let timerTime = document.querySelector('.timer-time');
-let displayTime = document.querySelector('.display-time');
-let progress = document.querySelector('.progress');
+const timerTime = document.querySelector('.timer-time');
+const displayTime = document.querySelector('.display-time');
+const progress = document.querySelector('.progress');
 const HISTORY_KEY = 'timerHistory';
 
 let startTime = 1800; //seconds in 30min
 
 timerInput.value = Math.trunc(startTime / 60);
 
-let audio = new Audio('audio1.mp3');
+const audio = new Audio('audio1.mp3');
 
 function disabledBtn() {
   if (timerInput.value <= 5) {
@@ -30,9 +30,9 @@ function disabledBtn() {
 }
 
 function formaingTimerTime(t) {
-  let h = Math.trunc(t / 3600).toString().padStart(2, '0');
-  let m = Math.trunc((t / 60) % 60).toString().padStart(2, '0');
-  let s = Math.trunc(t % 60).toString().padStart(2, '0');
+  const h = Math.trunc(t / 3600).toString().padStart(2, '0');
+  const m = Math.trunc((t / 60) % 60).toString().padStart(2, '0');
+  const s = Math.trunc(t % 60).toString().padStart(2, '0');
 
   return `${h}:${m}:${s}`
 }
@@ -54,8 +54,8 @@ function refreshTimer(t) {
 
 //progress bar
 function calcProgress() {
-  let pr = 100 / (+timerInput.value * 60);
-  let progressValue = (pr * startTime).toFixed(2);
+  const pr = 100 / (+timerInput.value * 60);
+  const progressValue = (pr * startTime).toFixed(2);
 
   progress.style.background =
     ` conic-gradient(var(--accent-blue) 0% ${progressValue}%, var(--timer-background-color) ${progressValue}% 100%)`;
@@ -77,18 +77,18 @@ function incrementTimerValue() {
 
 }
 
-let getHistory = () =>
+const getHistory = () =>
   JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
 
 btnMinusTime.addEventListener('click', decrementTimerValue);
 btnPlusTime.addEventListener('click', incrementTimerValue);
 
 let timerInterval;
-let eventsTimer = getHistory();
+const eventsTimer = getHistory();
 
 //genereted timer event
 function generetedTimerStartEvent(id) {
-  let newEvent = {
+  const newEvent = {
     id: id,
     start: new Date(),
     end: null,
@@ -101,14 +101,14 @@ function generetedTimerEndEvent(index, endTimer) {
 }
 
 function filterHistory(array) {
-  let result = array.filter(event => event.end != null);
+  const result = array.filter(event => event.end != null);
   arrangeHistoryID(result);
 
   return result;
 }
 
 function arrangeHistoryID(array) {
-  let result = [];
+  const result = [];
   array.forEach((element, index) => {
     element.id = index;
     result.push(element)
@@ -118,7 +118,7 @@ function arrangeHistoryID(array) {
 }
 
 function addToHistory(array) {
-  let filteredArray = filterHistory(array);
+  const filteredArray = filterHistory(array);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(filteredArray));
 };
 
@@ -176,15 +176,15 @@ btnReset.addEventListener('click', () => {
   disabledBtn();
 })
 
-let btnHistoryControl = document.querySelector('.history-control');
-let btnClearHistory = document.querySelector('.clear-history');
-let historyContainer = document.querySelector('.history');
+const btnHistoryControl = document.querySelector('.history-control');
+const btnClearHistory = document.querySelector('.clear-history');
+const historyContainer = document.querySelector('.history');
 
 function toggleHistoryActiveClass() {
 
   historyContainer.classList.toggle('active');
 
-  let isActive = historyContainer.classList.contains('active');
+  const isActive = historyContainer.classList.contains('active');
 
   if (isActive) {
     btnHistoryControl.innerHTML =`<span>
@@ -207,9 +207,9 @@ btnHistoryControl.addEventListener('click', toggleHistoryActiveClass);
 
 function formatingTime(t) {
 
-  let hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
-  let minute = new Date(t).getMinutes().toLocaleString().padStart(2, '0');
-  let second = new Date(t).getSeconds().toLocaleString().padStart(2, '0');
+  const hour = new Date(t).getHours().toLocaleString().padStart(2, '0');
+  const minute = new Date(t).getMinutes().toLocaleString().padStart(2, '0');
+  const second = new Date(t).getSeconds().toLocaleString().padStart(2, '0');
 
   return `
     ${hour}:${minute}:${second}
@@ -218,15 +218,15 @@ function formatingTime(t) {
 
 function formatingDate(d) {
 
-  let day = new Date(d).getUTCDate().toString().padStart(2, '0');
-  let month = (new Date(d).getMonth() + 1).toString().padStart(2, '0');
+  const day = new Date(d).getUTCDate().toString().padStart(2, '0');
+  const month = (new Date(d).getMonth() + 1).toString().padStart(2, '0');
 
   return `${day}.${month}`
 }
 function totalTime(start, end) {
 
-  let ms = new Date(end) - new Date(start);
-  let totalMinutes = ms / (1000 * 60);
+  const ms = new Date(end) - new Date(start);
+  const totalMinutes = ms / (1000 * 60);
 
   if (totalMinutes < 1) {
     totalMinutes *= 60;
@@ -237,7 +237,7 @@ function totalTime(start, end) {
 
 function generetedHistoryHtml() {
 
-  let timerHistory = getHistory();
+  const timerHistory = getHistory();
   let html;
 
   if (!timerHistory.length) {
@@ -265,11 +265,12 @@ btnClearHistory.addEventListener('click', () => {
 
 });
 
-let message = document.querySelector('.message');
-let wWidth = window.visualViewport.width;
-let wHeght = window.visualViewport.height;
+const message = document.querySelector('.message');
+const wWidth = window.visualViewport.width;
+const wHeght = window.visualViewport.height;
 
 document.addEventListener('mousemove', (e) => {
+
   if (e.pageY < 50 || e.pageX < 50 || e.pageX > wWidth - 50 || e.pageY > wHeght - 50) {
     message.classList.add('visible-message');
   } else {
