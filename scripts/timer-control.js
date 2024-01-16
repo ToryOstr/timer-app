@@ -84,7 +84,7 @@ btnMinusTime.addEventListener('click', decrementTimerValue);
 btnPlusTime.addEventListener('click', incrementTimerValue);
 
 let timerInterval;
-const eventsTimer = getHistory();
+let eventsTimer = getHistory();
 
 //genereted timer event
 function generetedTimerStartEvent(id) {
