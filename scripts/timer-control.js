@@ -226,7 +226,7 @@ function formatingDate(d) {
 function totalTime(start, end) {
 
   const ms = new Date(end) - new Date(start);
-  const totalMinutes = ms / (1000 * 60);
+  let totalMinutes = ms / (1000 * 60);
 
   if (totalMinutes < 1) {
     totalMinutes *= 60;
